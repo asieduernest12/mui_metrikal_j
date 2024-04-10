@@ -2,7 +2,10 @@ import './App.css';
 import React from 'react';
 import BarChart from './BarChartSVG';
 // import BarChart from './BarChartWebGL.js';
+import { Box, Stack, AppBar, Toolbar, Typography, IconButton, TextField, Table, TableRow, TableCell, TableHead, TableBody } from '@mui/material';
 import population from './population.json';
+import { Menu, Delete as DeleteIcon, AddCircleOutline as AddIcon } from '@mui/icons-material';
+import { useState } from 'react';
 
 const dataset = {
 	title: 'World population',
@@ -17,8 +20,11 @@ const dataset = {
 	],
 };
 
+const _tempPoint = { year: '', population: 0 };
+
 const App = () => {
 	const [dataSet, setDataSet] = React.useState(population);
+	const [tempPoint, setTempPoint] = useState(_tempPoint);
 	// const didMount = React.useRef(false);
 
 	// React.useEffect(() => {
@@ -51,22 +57,84 @@ const App = () => {
 		});
 	};
 
+	const addPoint = (/** @type {(typeof dataset)['data'][number]} */ newPoint) => {
+		setDataSet((prev) => ({ ...prev, data: [...prev.data, newPoint] }));
+		setTempPoint({ ..._tempPoint });
+	};
+	const removeEntry = (year) => {
+		setDataSet((prev) => ({ ...prev, data: prev.data.filter((yp) => yp.year !== year) }));
+	};
+
 	return (
-		<div className='App' style={{ display: 'flex' }}>
-			<div className='nfc-left-app-box' style={{ flex: '50%' }}>
-				{/* show data on the left in a list */}
-				{dataSet.data.map((entry) => (
-					<li key={JSON.stringify(entry)}>
-						{/* year , pop inputs */}
-            Input
-						<input type='number' step={0.01} value={entry.year} />
-						<input type='number' step={0.01} defaultValue={entry.population} onChange={(e) => updatePopulation(e, entry)} />
-					</li>
-				))}
-			</div>
-			{/* <BarChart dataset={dataSet} /> */}
-			<BarChart dataset={dataSet} />
-		</div>
+		<Stack direction='column' width='100%'>
+			<AppBar position='fixed' color='primary'>
+				<AppBar position='fixed' color='primary'>
+					<Toolbar>
+						<IconButton edge='start' color='inherit' aria-label='menu'>
+							<Menu />
+						</IconButton>
+						<Typography variant='h6'>Metrikal</Typography>
+					</Toolbar>
+				</AppBar>
+			</AppBar>
+			<Stack direction='row' width='100%' spacing={10} mt={10}>
+				<Box width='50%'>
+					<Table>
+						{/* provide update form in tablehead */}
+
+						<TableHead>
+							<TableRow>
+								<TableCell>
+									<TextField
+										name='year'
+										label='Year'
+										defaultValue={new Date().getFullYear()}
+										value={tempPoint.year}
+										onChange={(e) => setTempPoint((tp) => ({ ...tp, year: e.target.value }))}
+									/>
+								</TableCell>
+								<TableCell>
+									<TextField
+										name='population'
+										label='Population'
+										step={0.01}
+										value={tempPoint.population}
+										onChange={(e) => setTempPoint((tp) => ({ ...tp, population: e.target.value }))}
+									/>
+								</TableCell>
+								<TableCell>
+									<IconButton aria-label='' onClick={() => addPoint(tempPoint)}>
+										<AddIcon />
+									</IconButton>
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						{/* show datapoint in the table body */}
+						<TableBody>
+							{dataSet.data.map((entry) => (
+								<TableRow key={JSON.stringify(entry)}>
+									<TableCell>
+										<TextField type='number' step={0.01} value={entry.year} label='Year' inputProps={{ readOnly: true }} />
+									</TableCell>
+									<TableCell>
+										<TextField type='number' step={0.01} value={entry.population} label='Population' inputProps={{ readOnly: true }} />
+									</TableCell>
+									<TableCell>
+										<IconButton aria-label='' onClick={() => removeEntry(entry.year)}>
+											<DeleteIcon />
+										</IconButton>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</Box>
+
+				<Box width={'50%'}>
+					<BarChart dataset={dataSet} />
+				</Box>
+			</Stack>
+		</Stack>
 	);
 };
 
