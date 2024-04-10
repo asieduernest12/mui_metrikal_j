@@ -1,0 +1,37 @@
+{
+	"title": "Grade Distribution",
+
+	"fileName": "grades.json",
+
+	"axes": {
+		"x": "grade",
+
+		"y": "count"
+	},
+
+	"data": [
+		{ "grade": "A", "count": 5 },
+
+		{ "grade": "A-", "count": 10 },
+
+		{ "grade": "B+", "count": 12 },
+
+		{ "grade": "B", "count": 23 },
+
+		{ "grade": "B-", "count": 7 },
+
+		{ "grade": "C+", "count": 9 },
+
+		{ "grade": "C", "count": 16 },
+
+		{ "grade": "C", "count": 3 },
+
+		{ "grade": "D+", "count": 8 },
+
+		{ "grade": "D", "count": 11 },
+
+		{ "grade": "D-", "count": 13 },
+
+		{ "grade": "F", "count": 2 }
+	]
+}
