@@ -18,7 +18,7 @@ datapoints. Provides the ability to add and remove datapoints: Adding - add a bu
 - BarChart/Other visualizations: Dynamic axes (donâ€™t hardcode year/population), implement update lifecycle phase for SVG elements.
 - Create your 3 components (you already have BarChart, you need
 Editor and Header) - start with a static layout (header 100% width, editor/barchart/third visualization 50% width)
-- Use population.json for debugging, implement it as a state in the App component and send as prop to child components.
+-x Use population.json for debugging, implement it as a state in the App component and send as prop to child components.
 - Load: Load a dataset via localStorage. Have the user prompted to select filenames (e.g., population.json) that are in local storage. No text entry!
 - Save as: Save the current datasetâ€™s state to localStorage. Prompt the user to enter a fileName to save it as. Overwrite the fileName field in the dataset, and store the dataset to localStorage. You can overwrite a dataset with the same name
 - Save: Save as, but no prompts. Just update the current dataset in

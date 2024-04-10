@@ -2,77 +2,89 @@ import './App.css';
 import React from 'react';
 import BarChart from './BarChartSVG';
 // import BarChart from './BarChartWebGL.js';
-import { Box, Stack, AppBar, Toolbar, Typography, IconButton, TextField, Table, TableRow, TableCell, TableHead, TableBody } from '@mui/material';
+import {
+	Box,
+	Stack,
+	AppBar,
+	Toolbar,
+	Typography,
+	IconButton,
+	TextField,
+	Table,
+	TableRow,
+	TableCell,
+	TableHead,
+	TableBody,
+	Menu,
+	MenuItem,
+} from '@mui/material';
 import population from './population.json';
-import { Menu, Delete as DeleteIcon, AddCircleOutline as AddIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Delete as DeleteIcon, AddCircleOutline as AddIcon } from '@mui/icons-material';
 import { useState } from 'react';
-
-const dataset = {
-	title: 'World population',
-	data: [
-		{ year: '1950', population: 2.525 },
-		{ year: '1960', population: 3.018 },
-		{ year: '1970', population: 3.682 },
-		{ year: '1980', population: 4.44 },
-		{ year: '1990', population: 5.31 },
-		{ year: '2000', population: 6.127 },
-		{ year: '2010', population: 6.93 },
-	],
-};
+import { useRef } from 'react';
 
 const _tempPoint = { year: '', population: 0 };
 
 const App = () => {
 	const [dataSet, setDataSet] = React.useState(population);
 	const [tempPoint, setTempPoint] = useState(_tempPoint);
-	// const didMount = React.useRef(false);
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuTriggerRef = useRef();
 
-	// React.useEffect(() => {
-	// 	if (!didMount.current) {
-	// 		didMount.current = true;
-
-	// 		// Create an effect where we make a new random dataset every second
-	// 		// Showcases the update functionality
-	// 		setInterval(function () {
-	// 			for (let i = 0; i < dataset.data.length; i++) {
-	// 				dataSet.data[i].population = Math.random() * 7;
-	// 			}
-
-	// 			dataSet.title = 'World Population (as of ' + new Date().getMinutes() + ':' + new Date().getSeconds() + ')';
-	// 			setDataSet(JSON.parse(JSON.stringify(dataSet)));
-	// 		}, 1000);
-	// 	}
-	// }, [dataSet, setDataSet, didMount]);
-	const updatePopulation = (e, cEntry) => {
-		const newPopulation = +e.target.value;
-		console.log('updatePopulation.fired', { ...cEntry, newPopulation });
-
-		setDataSet((prev) => {
-			const newDataSet = { ...prev };
-
-			//iterate through the data key and replace the population of the year that equals cyear
-			newDataSet.data = newDataSet.data.map(({ population, year }) => ({ year, population: +(cEntry.year === year ? newPopulation : population) }));
-			// console.table(newDataSet.data);
-			return newDataSet;
-		});
-	};
-
-	const addPoint = (/** @type {(typeof dataset)['data'][number]} */ newPoint) => {
+	const addPoint = (/** @type {(typeof dataSet)['data'][number]} */ newPoint) => {
 		setDataSet((prev) => ({ ...prev, data: [...prev.data, newPoint] }));
 		setTempPoint({ ..._tempPoint });
 	};
+
 	const removeEntry = (year) => {
 		setDataSet((prev) => ({ ...prev, data: prev.data.filter((yp) => yp.year !== year) }));
 	};
 
+	const onFileChange = (event) => {
+		const file = event.target.files[0];
+		if (!file) {
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			try {
+				const json = JSON.parse(event.target.result);
+				setDataSet(json);
+			} catch (error) {
+				console.error('Error parsing JSON', error);
+			}
+		};
+		reader.onerror = (error) => console.error('Error reading file', error);
+		reader.readAsText(file);
+	};
+
+	const saveFile = (data = dataSet) => {
+		const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'data.json';
+		link.click();
+		URL.revokeObjectURL(url);
+	};
+
 	return (
 		<Stack direction='column' width='100%'>
-			<AppBar position='fixed' color='primary'>
+			<AppBar color='primary'>
 				<AppBar position='fixed' color='primary'>
 					<Toolbar>
-						<IconButton edge='start' color='inherit' aria-label='menu'>
-							<Menu />
+						<IconButton edge='start' color='inherit' aria-label='menu' onClick={() => setMenuOpen(true)} ref={menuTriggerRef}>
+							<MenuIcon />
 						</IconButton>
+						<Menu id='save_and_load' anchorEl={menuTriggerRef} keepMounted open={Boolean(menuOpen)} onClose={() => setMenuOpen(false)}>
+							<MenuItem onClick={() => null}>
+								<label htmlFor='loadFile'>Load file</label>
+								<input hidden type='file' id='loadFile' onChange={onFileChange} />
+							</MenuItem>
+							<MenuItem onClick={() => null}>Save</MenuItem>
+							<MenuItem onClick={() => saveFile()}>Save as*</MenuItem>
+						</Menu>
 						<Typography variant='h6'>Metrikal</Typography>
 					</Toolbar>
 				</AppBar>
@@ -105,6 +117,10 @@ const App = () => {
 								<TableCell>
 									<IconButton aria-label='' onClick={() => addPoint(tempPoint)}>
 										<AddIcon />
+									</IconButton>
+
+									<IconButton aria-label='' onClick={() => addPoint({ year: dataSet.data.at(-1).year + 1, population: Math.random() * 8.8 + 0.02 })}>
+										Add Random
 									</IconButton>
 								</TableCell>
 							</TableRow>
