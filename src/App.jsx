@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { Header } from './Header';
 import { Editor } from './Editor';
+import PieChart from './PieChart';
 
 const _tempPoint = { year: '', population: 0 };
 
@@ -62,9 +63,10 @@ const App = () => {
 			<Stack direction='row' width='100%' spacing={10} mt={10}>
 				<Box width='50%'>{Editor(tempPoint, setTempPoint, addPoint, dataSet, removeEntry)}</Box>
 
-				<Box width={'50%'}>
-					<BarChart dataset={dataSet} />
-				</Box>
+				<Stack width='50%' direction='vertical'>
+					<BarChart dataset={dataSet} sx={{width:'50%'}}/>
+					<PieChart dataset={dataSet} sx={{ width: '100%', height: '100%' }} />
+				</Stack>
 			</Stack>
 		</Stack>
 	);
