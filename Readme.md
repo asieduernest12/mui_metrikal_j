@@ -19,11 +19,11 @@ datapoints. Provides the ability to add and remove datapoints: Adding - add a bu
 - Create your 3 components (you already have BarChart, you need
 Editor and Header) - start with a static layout (header 100% width, editor/barchart/third visualization 50% width)
 -x Use population.json for debugging, implement it as a state in the App component and send as prop to child components.
-- Load: Load a dataset via localStorage. Have the user prompted to select filenames (e.g., population.json) that are in local storage. No text entry!
-- Save as: Save the current datasetâ€™s state to localStorage. Prompt the user to enter a fileName to save it as. Overwrite the fileName field in the dataset, and store the dataset to localStorage. You can overwrite a dataset with the same name
-- Save: Save as, but no prompts. Just update the current dataset in
+-x Load: Load a dataset via localStorage. Have the user prompted to select filenames (e.g., population.json) that are in local storage. No text entry!
+-x Save as: Save the current datasetâ€™s state to localStorage. Prompt the user to enter a fileName to save it as. Overwrite the fileName field in the dataset, and store the dataset to localStorage. You can overwrite a dataset with the same name
+-x Save: Save as, but no prompts. Just update the current dataset in
 localStorage
-- Your App should initially load in the following 2 datasets to local storage, and initialize with population.json:
+-x Your App should initially load in the following 2 datasets to local storage, and initialize with population.json:
 population.json
 
 {
@@ -108,17 +108,20 @@ grades.json
 Your final upload to the department folder must contain ONLY the following files:
 
 public/index.html: HTML5 source code from React project public folder
+
 src/App.js: App component JavaScript source code from React project src folder
 src/App.css: App component CSS source code from React project src folder
+
 src/Editor.js: Editor component JavaScript source code from React project src folder
 src/Editor.css: Editor component CSS source code from React project src folder
+
 src/BarChart.js: BarChart component JavaScript source code from React project src folder
 src/BarChart.css: BarChart component CSS source code from React project src folder
+
 src/Header.js: Header component JavaScript source code from React project src folder
 src/Header.css: Header component CSS source code from React project src folder
+
 Additional .js and .css files in the src/ directory for additionally created React components/visualizations
-
-
 
 
 
