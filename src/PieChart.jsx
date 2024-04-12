@@ -58,17 +58,14 @@ function PieChart(props) {
 		const width = containerRef.current.clientWidth;
 		const height = Math.min(width, containerRef.current.clientHeight);
 		const radius = Math.min(width, height) / 2;
-
-		if (!svgRef.current) {
-			return;
+		if (svgRef.current === undefined) {
+			svgRef.current = d3
+				.select(containerRef.current)
+				.append('svg')
+				.attr('width', width)
+				.attr('height', height)
+				.attr('transform', `translate(${width / 2}, ${height / 2})`);
 		}
-		svgRef.current = d3
-			.select(containerRef.current)
-			.append('svg')
-			.attr('width', width)
-			.attr('height', height)
-			.attr('transform', `translate(${width / 2}, ${height / 2})`);
-
 		// Specify the chart’s dimensions.
 		const color = d3.scaleOrdinal(d3.schemeCategory10);
 
